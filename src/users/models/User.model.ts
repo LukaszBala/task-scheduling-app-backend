@@ -7,11 +7,11 @@ export const UserSchema = new mongoose.Schema({
 });
 
 export class User {
-    id: string;
+    userId: string;
     username: string;
     password: string;
     email: string;
 
-    constructor(id: string, username: string, password: string, email: string){};
+    constructor(userId: string, username: string, password: string, email: string){};
     
 }
