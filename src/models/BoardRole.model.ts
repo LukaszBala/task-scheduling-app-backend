@@ -5,13 +5,9 @@ export const BoardRoleSchema = new mongoose.Schema({
     boardId: String,
     role: String
 });
-export class TaskRole {
+export interface BoardRole {
     id: string;
     userId: string;
     boardId: string;
-    role: string;
-
-
-    constructor(id: string, userId: string, boardId: string, role: string){};
-    
+    role: string;  
 }

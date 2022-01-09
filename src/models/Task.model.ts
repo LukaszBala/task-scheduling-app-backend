@@ -8,7 +8,7 @@ export const TaskSchema = new mongoose.Schema({
     description: String,
     status: String
 });
-export class Task {
+export interface Task {
     id: string;
     columnId: string;
     name: string;
@@ -16,7 +16,5 @@ export class Task {
     createdDate: string;
     description: string;
     status: string;
-
-    constructor(id: string, columnId: string, name: string, createdBy: string, createdDate: string, description: string, status: string){};
     
 }

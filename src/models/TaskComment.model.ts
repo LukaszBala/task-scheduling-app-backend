@@ -1,19 +1,16 @@
 import * as mongoose from 'mongoose';
 
-export const TaskCommentsSchema = new mongoose.Schema({
+export const TaskCommentSchema = new mongoose.Schema({
     taskId: String,
     comment: String,
     createdBy: String,
     createdDate: String
 });
-export class TaskComments {
+export interface TaskComment {
     id: string;
     taskId: string;
     comment: string;
     createdBy: string;
     createdDate: string;
-
-
-    constructor(id: string, taskId: string, comment: string, createdBy: string, createdDate: string){};
-    
+  
 }

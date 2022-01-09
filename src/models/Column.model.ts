@@ -6,13 +6,9 @@ export const ColumnSchema = new mongoose.Schema({
     description: String
 });
 
-export class Column {
+export interface Column {
     id: string;
     boardId: string;
     name: string;
-    description: string;
-
-
-    constructor(id: string, boardId: string, name: string, description: string){};
-    
+    description: string;    
 }
