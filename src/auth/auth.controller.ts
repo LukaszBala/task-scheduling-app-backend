@@ -4,8 +4,6 @@ import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { AuthService } from "./services/auth.service";
 import { UsersService } from "../users/services/users.service";
 import { RegisterModel } from "./models/register.model";
-import { User } from "../users/models/User.model";
-import { LoginModel } from "./models/login.model";
 
 @Controller("auth/")
 export class AuthController {
@@ -16,8 +14,8 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post("login")
-  async login(@Body() user: LoginModel) {
-    return this.authService.login(user as unknown as User); // LocalAuthGuard to mapuje na usera
+  async login(@Req() req) {
+    return this.authService.login(req.user); // LocalAuthGuard to mapuje na usera
   }
 
   @Get("profile")
@@ -37,8 +35,7 @@ export class AuthController {
     if (exist) {
       throw new ConflictException(`email:${registerDto.email} is existed`);
     }
-    const res = await this.userService.register(registerDto);
-    return res ? "Successfully created user" : "Not that successful";
+    await this.userService.register(registerDto);
   }
 
 }
