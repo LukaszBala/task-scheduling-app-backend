@@ -18,6 +18,11 @@ export class AuthController {
     return this.authService.login(req.user); // LocalAuthGuard to mapuje na usera
   }
 
+  @Get("user")
+  async getUser(@Req() req) {
+    return this.authService.getUserFromToken(req.headers.authorization);
+  }
+
   @Get("profile")
   getProfile(@Req() req) {
     return req.user;

@@ -10,23 +10,29 @@ import { v4 as uuidv4 } from "uuid";
 @Injectable()
 export class UsersService {
 
-  constructor(@InjectModel("User") private readonly boardModel: Model<User>) {
+  constructor(@InjectModel("User") private readonly userModel: Model<User>) {
   }
 
-  async findOne(login: string): Promise<User | undefined> {
-    return this.boardModel.findOne({$or: [
-        {email: login},
-        {username: login}
-      ]});
+  async findOneByEmailOrUsername(login: string): Promise<User | undefined> {
+    return this.userModel.findOne({
+      $or: [
+        { email: login },
+        { username: login }
+      ]
+    });
+  }
+
+  async findOneByUserId(userId: string): Promise<User | undefined> {
+    return this.userModel.findOne({ userId });
   }
 
   async existsByUsername(username: string): Promise<boolean | undefined> {
-    const user = await this.boardModel.findOne({ username });
+    const user = await this.userModel.findOne({ username });
     return !!user;
   }
 
   async existsByEmail(email: string): Promise<boolean | undefined> {
-    const user = await this.boardModel.findOne({ email });
+    const user = await this.userModel.findOne({ email });
     return !!user;
   }
 
@@ -34,7 +40,7 @@ export class UsersService {
     const saltOrRounds = 10;
     const hashedPass = await bcrypt.hash(registerDto.password, saltOrRounds);
     const userId = uuidv4();
-    const result = await this.boardModel.create({
+    const result = await this.userModel.create({
       userId: userId,
       username: registerDto.username,
       password: hashedPass,
