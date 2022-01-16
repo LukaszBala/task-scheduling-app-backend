@@ -1,7 +1,6 @@
 import {Injectable, NotFoundException } from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
 import {Board} from 'src/models/Board.model';
 
 @Injectable()
@@ -18,5 +17,9 @@ export class BoardService {
         });
         const result = await newBoard.save();
         return result.id as string;
+    }
+
+    retrieveAllBoards(boards){
+        return this.boardModel.find({id:{$in: boards}});
     }
 }

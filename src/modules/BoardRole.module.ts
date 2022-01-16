@@ -7,6 +7,7 @@ import { BoardRoleController } from 'src/controllers/BoardRole.controller'
 @Module({
     imports: [MongooseModule.forFeature([{name: 'BoardRole', schema:BoardRoleSchema}])],
     controllers: [BoardRoleController],
-    providers: [BoardRoleService]
+    providers: [BoardRoleService],
+    exports: [MongooseModule]
 })
-export class BoardRoleModule{}
+export class BoardRoleModule {}

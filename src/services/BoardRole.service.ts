@@ -19,4 +19,15 @@ export class BoardRoleService {
         const result = await newBoardRole.save();
         return result.id as string;
     }
+
+    async retrieveUserBoards(userId: string) {
+        let boardsIds: string[] =[];
+        
+        let boardRoles =  this.boardRoleModel.find({userId: userId}).lean();
+        (await boardRoles).forEach(element=>{
+            boardsIds.push(element.boardId)
+        })
+      
+        return boardsIds
+    }
 }
