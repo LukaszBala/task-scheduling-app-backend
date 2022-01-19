@@ -6,4 +6,5 @@ export class Task {
   createdDate: number;
   description: string;
   comments: string[];
+  assignee: string;
 }

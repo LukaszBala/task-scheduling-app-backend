@@ -1,5 +1,8 @@
+import { Task } from "./task";
+
 export class Column {
   id: string;
   name: string;
-  items?: any[]
+  boardId?: string;
+  items?: Task[]
 }

@@ -3,6 +3,7 @@ import { BoardService } from "src/services/board.service";
 import { AddBoardDto } from "./models/add-board.dto";
 import { AddTaskDto } from "./models/add-task.dto";
 import { MoveTaskDto } from "./models/move-task.dto";
+import { EditTaskDto } from "./models/edit-task.dto";
 
 @Controller("board")
 export class BoardController {
@@ -37,6 +38,11 @@ export class BoardController {
   @Post("task/move")
   async moveTask(@Body() taskPositions: MoveTaskDto, @Req() req) {
     await this.boardService.moveTask(req.user.userId, taskPositions);
+  }
+
+  @Post("task/edit")
+  async editTask(@Body() edit: EditTaskDto, @Req() req) {
+    return await this.boardService.editTask(req.user.userId, edit);
   }
 }
 

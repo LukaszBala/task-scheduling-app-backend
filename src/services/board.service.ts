@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Board } from "src/board/models/board.model";
@@ -10,6 +10,7 @@ import { AddTaskDto } from "../board/models/add-task.dto";
 import { Task } from "../board/models/task";
 import { v4 as uuidv4 } from "uuid";
 import { MoveTaskDto } from "../board/models/move-task.dto";
+import { EditTaskDto } from "../board/models/edit-task.dto";
 
 @Injectable()
 export class BoardService {
@@ -19,6 +20,7 @@ export class BoardService {
   }
 
   async insertBoard(board: AddBoardDto, userId: string) {
+    board.columns = board.columns.map(col => ({ ...col, id: uuidv4() }));
     const newBoard = new this.boardModel({
       name: board.name,
       columns: board.columns,
@@ -45,6 +47,9 @@ export class BoardService {
         const data = users.find(u => u.userId === user.userId);
         return { ...user, username: data.username, email: data.email };
       });
+      board.columns = board.columns.map(col => {
+        return { ...col, boardId: board.id };
+      });
       return {
         id: board._id,
         name: board.name,
@@ -65,6 +70,9 @@ export class BoardService {
     board.users = board.users.map(user => {
       const data = users.find(u => u.userId === user.userId);
       return { ...user, username: data.username, email: data.email };
+    });
+    board.columns = board.columns.map(col => {
+      return { ...col, boardId: board.id };
     });
     return {
       id: board._id,
@@ -148,5 +156,34 @@ export class BoardService {
     if (!userCanAccess) {
       throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
     }
+  }
+
+  async editTask(userId, edit: EditTaskDto) {
+    const board = await this.boardModel.findById(edit.boardId);
+
+    this.userCanAccessGuard(board, userId);
+
+    let taskIdx;
+    const column = board.columns.find(col => {
+      taskIdx = col.items.findIndex(item => item.id === edit.task.id);
+      return taskIdx != null;
+    });
+
+    if (!column || taskIdx == null) {
+      throw new NotFoundException("task not found.");
+    }
+
+    column.items[taskIdx] = { ...column.items[taskIdx], ...edit.task };
+
+    await this.boardModel.updateOne(
+      { _id: edit.boardId, "columns.id": edit.task.columnId },
+      {
+        $set: {
+          "columns.$": column
+        }
+      }
+    );
+    return await this.getSingleBoard(userId, edit.boardId);
+
   }
 }
