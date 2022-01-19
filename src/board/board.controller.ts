@@ -1,0 +1,44 @@
+import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
+import { BoardService } from "src/services/board.service";
+import { AddBoardDto } from "./models/add-board.dto";
+import { AddTaskDto } from "./models/add-task.dto";
+import { MoveTaskDto } from "./models/move-task.dto";
+
+@Controller("board")
+export class BoardController {
+  constructor(private readonly boardService: BoardService) {
+  }
+
+  @Post()
+  async addBoard(
+    @Body() board: AddBoardDto,
+    @Req() req
+  ) {
+    const generatedId = await this.boardService.insertBoard(board, req.user.userId);
+    return { id: generatedId };
+  }
+
+  @Get()
+  async getAllBoards(@Req() req) {
+    return await this.boardService.getAllUserBoards(req.user.userId);
+  }
+
+  @Get(":id")
+  async getSingleBoard(@Param() params, @Req() req) {
+    return await this.boardService.getSingleBoard(req.user.userId, params.id);
+
+  }
+
+  @Post("task")
+  async addTask(@Body() task: AddTaskDto, @Req() req) {
+    await this.boardService.addTask(task, req.user.userId);
+  }
+
+  @Post("task/move")
+  async moveTask(@Body() taskPositions: MoveTaskDto, @Req() req) {
+    await this.boardService.moveTask(req.user.userId, taskPositions);
+  }
+}
+
+
+
