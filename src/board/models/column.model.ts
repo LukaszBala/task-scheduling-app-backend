@@ -8,7 +8,6 @@ export const ColumnSchema = new mongoose.Schema({
 
 export interface Column {
     id: string;
-    boardId: string;
     name: string;
-    description: string;    
+    items?: any[]
 }

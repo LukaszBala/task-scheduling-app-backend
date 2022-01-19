@@ -44,8 +44,17 @@ export class UsersService {
       userId: userId,
       username: registerDto.username,
       password: hashedPass,
-      email: registerDto.email
+      email: registerDto.email,
+      boardIds: []
     });
     return !!result;
+  }
+
+  async addBoardToUsers(userIds: string[], boardId: string) {
+    await this.userModel.updateMany({ userId: { $in: userIds } }, { $push: { boardIds: boardId } });
+  }
+
+  async findUsersByIds(userIds: string[]) {
+    return this.userModel.find({ userId: { $in: userIds } });
   }
 }

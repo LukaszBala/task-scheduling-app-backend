@@ -8,6 +8,7 @@ export const BoardRoleSchema = new mongoose.Schema({
 export interface BoardRole {
     id: string;
     userId: string;
+    boardIds: string[]
     boardId: string;
     role: string;  
 }

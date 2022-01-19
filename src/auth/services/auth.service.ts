@@ -33,6 +33,6 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException("Invalid user");
     }
-    return { username: user.username, userId: user.userId, email: user.email };
+    return { username: user.username, userId: user.userId, email: user.email, boardIds: user.boardIds };
   }
 }
