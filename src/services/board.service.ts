@@ -51,8 +51,10 @@ export class BoardService {
       board.columns = board.columns.map(col => {
         return { ...col, boardId: board.id };
       });
+      const role = board.users.find(user => user.userId === userId)?.role;
       return {
         id: board._id,
+        role,
         name: board.name,
         columns: board.columns,
         users: board.users,
@@ -75,8 +77,10 @@ export class BoardService {
     board.columns = board.columns.map(col => {
       return { ...col, boardId: board.id };
     });
+    const role = board.users.find(user => user.userId === userId)?.role;
     return {
       id: board._id,
+      role,
       name: board.name,
       columns: board.columns,
       users: board.users,
