@@ -22,6 +22,17 @@ export class UsersService {
     });
   }
 
+  async findByEmailOrUsername(name: string) {
+    const users: User[] = await this.userModel.find({
+      $or: [
+        { email: name },
+        { username: name }
+      ]
+    });
+
+    return users.map(user => ({ userId: user.userId, username: user.username, email: user.email }));
+  }
+
   async findOneByUserId(userId: string): Promise<User | undefined> {
     return this.userModel.findOne({ userId });
   }

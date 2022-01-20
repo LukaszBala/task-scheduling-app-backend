@@ -11,6 +11,7 @@ import { Task } from "../board/models/task";
 import { v4 as uuidv4 } from "uuid";
 import { MoveTaskDto } from "../board/models/move-task.dto";
 import { EditTaskDto } from "../board/models/edit-task.dto";
+import { AddUserDto } from "../board/models/add-user.dto";
 
 @Injectable()
 export class BoardService {
@@ -185,5 +186,17 @@ export class BoardService {
     );
     return await this.getSingleBoard(userId, edit.boardId);
 
+  }
+
+  async addUserToBoard(userId: string, boardId: string, user: AddUserDto) {
+    const board = await this.boardModel.findById(boardId);
+
+    this.userCanAccessGuard(board, userId);
+
+    board.users.push(user);
+    await board.save();
+
+    await this.usersService.addBoardToUsers([user.userId], boardId);
+    return await this.getSingleBoard(userId, boardId);
   }
 }

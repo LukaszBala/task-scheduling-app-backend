@@ -4,6 +4,7 @@ import { AddBoardDto } from "./models/add-board.dto";
 import { AddTaskDto } from "./models/add-task.dto";
 import { MoveTaskDto } from "./models/move-task.dto";
 import { EditTaskDto } from "./models/edit-task.dto";
+import { AddUserDto } from "./models/add-user.dto";
 
 @Controller("board")
 export class BoardController {
@@ -27,8 +28,12 @@ export class BoardController {
   @Get(":id")
   async getSingleBoard(@Param() params, @Req() req) {
     return await this.boardService.getSingleBoard(req.user.userId, params.id);
-
   }
+
+  @Post(":id/add-user")
+  async addUSerToBoard(@Param() params, @Req() req, @Body() user: AddUserDto) {
+    return await this.boardService.addUserToBoard(req.user.userId, params.id, user);
+}
 
   @Post("task")
   async addTask(@Body() task: AddTaskDto, @Req() req) {
