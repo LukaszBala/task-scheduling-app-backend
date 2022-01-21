@@ -27,7 +27,11 @@ export class BoardService {
   ) {}
 
   async insertBoard(board: AddBoardDto, userId: string) {
-    board.columns = board.columns.map((col) => ({ ...col, id: uuidv4() }));
+    board.columns = board.columns.map((col) => ({
+      ...col,
+      id: uuidv4(),
+      boardId: undefined,
+    }));
     const newBoard = new this.boardModel({
       name: board.name,
       columns: board.columns,
@@ -249,9 +253,6 @@ export class BoardService {
       taskIdx = col.items.findIndex((item) => item.id === taskDeleteDto.taskId);
       return taskIdx != null && taskIdx >= 0;
     });
-
-    console.log('task,', taskIdx);
-    console.log('column', columnIdx);
 
     if (
       columnIdx != null &&
