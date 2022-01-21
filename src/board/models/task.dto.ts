@@ -1,9 +1,8 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class TaskDto {
-
   @IsNotEmpty()
-  columnId: string
+  columnId: string;
 
   @IsNotEmpty()
   name: string;

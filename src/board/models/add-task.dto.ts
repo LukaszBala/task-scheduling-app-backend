@@ -1,8 +1,7 @@
-import { TaskDto } from "./task.dto";
-import { IsNotEmpty } from "class-validator";
+import { TaskDto } from './task.dto';
+import { IsNotEmpty } from 'class-validator';
 
 export class AddTaskDto {
-
   @IsNotEmpty()
   boardId: string;
 

@@ -1,8 +1,7 @@
-import { Column } from "./column.model";
-import { IsNotEmpty } from "class-validator";
+import { Column } from './column.model';
+import { IsNotEmpty } from 'class-validator';
 
 export class AddBoardDto {
-
   @IsNotEmpty()
   name: string;
 

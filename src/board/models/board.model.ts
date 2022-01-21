@@ -1,11 +1,10 @@
-import { Column } from "./column.model";
-import { BoardUserModel } from "./board-user.model";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { BoardRoleEnum } from "./board-role.enum";
+import { Column } from './column.model';
+import { BoardUserModel } from './board-user.model';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { BoardRoleEnum } from './board-role.enum';
 
 @Schema()
 export class Board {
-
   id: string;
 
   role?: BoardRoleEnum;

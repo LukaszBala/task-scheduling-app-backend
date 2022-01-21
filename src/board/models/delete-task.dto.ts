@@ -1,9 +1,9 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class LoginModel {
+export class DeleteTaskDto {
   @IsNotEmpty()
-  login: string;
+  boardId: string;
 
   @IsNotEmpty()
-  password: string;
+  taskId: string;
 }

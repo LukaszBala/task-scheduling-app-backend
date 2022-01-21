@@ -1,36 +1,32 @@
-import { Injectable } from "@nestjs/common";
-import { User } from "../models/User.model";
-import { RegisterModel } from "../../auth/models/register.model";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import * as bcrypt from "bcrypt";
-import { v4 as uuidv4 } from "uuid";
-
+import { Injectable } from '@nestjs/common';
+import { User } from '../models/User.model';
+import { RegisterModel } from '../../auth/models/register.model';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
-
-  constructor(@InjectModel("User") private readonly userModel: Model<User>) {
-  }
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   async findOneByEmailOrUsername(login: string): Promise<User | undefined> {
     return this.userModel.findOne({
-      $or: [
-        { email: login },
-        { username: login }
-      ]
+      $or: [{ email: login }, { username: login }],
     });
   }
 
   async findByEmailOrUsername(name: string) {
     const users: User[] = await this.userModel.find({
-      $or: [
-        { email: name },
-        { username: name }
-      ]
+      $or: [{ email: name }, { username: name }],
     });
 
-    return users.map(user => ({ userId: user.userId, username: user.username, email: user.email }));
+    return users.map((user) => ({
+      userId: user.userId,
+      username: user.username,
+      email: user.email,
+      color: user.color,
+    }));
   }
 
   async findOneByUserId(userId: string): Promise<User | undefined> {
@@ -54,18 +50,34 @@ export class UsersService {
     const result = await this.userModel.create({
       userId: userId,
       username: registerDto.username,
+      color: '#' + Math.floor(Math.random() * 16777215).toString(16),
       password: hashedPass,
       email: registerDto.email,
-      boardIds: []
+      boardIds: [],
     });
     return !!result;
   }
 
   async addBoardToUsers(userIds: string[], boardId: string) {
-    await this.userModel.updateMany({ userId: { $in: userIds } }, { $push: { boardIds: boardId } });
+    await this.userModel.updateMany(
+      { userId: { $in: userIds } },
+      { $push: { boardIds: boardId } },
+    );
   }
 
   async findUsersByIds(userIds: string[]) {
     return this.userModel.find({ userId: { $in: userIds } });
+  }
+
+  async assignColors() {
+    const users = await this.userModel.find({});
+    await Promise.all(
+      users.map(async (user) => {
+        await this.userModel.updateOne(
+          { userId: user.userId },
+          { color: '#' + Math.floor(Math.random() * 16777215).toString(16) },
+        );
+      }),
+    );
   }
 }

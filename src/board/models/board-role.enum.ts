@@ -1,5 +1,5 @@
 export enum BoardRoleEnum {
-  CREATOR ='CREATOR',
+  CREATOR = 'CREATOR',
   ADMIN = 'ADMIN',
-  USER = 'USER'
+  USER = 'USER',
 }
