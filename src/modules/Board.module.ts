@@ -4,7 +4,6 @@ import { BoardController } from 'src/board/board.controller';
 import { BoardSchema } from 'src/board/models/board.model';
 import { BoardService } from 'src/services/board.service';
 import { UsersModule } from '../users/users.module';
-import { BoardRoleSchema } from 'src/board/models/board-role.model';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -17,7 +16,6 @@ import { AuthModule } from '../auth/auth.module';
         schema: BoardSchema,
       },
     ]),
-    MongooseModule.forFeature([{ name: 'BoardRole', schema: BoardRoleSchema }]),
   ],
   controllers: [BoardController],
   providers: [BoardService],

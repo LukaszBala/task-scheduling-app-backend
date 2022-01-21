@@ -13,11 +13,7 @@ export class BoardController {
 
   @Post()
   async addBoard(@Body() board: AddBoardDto, @Req() req) {
-    const generatedId = await this.boardService.insertBoard(
-      board,
-      req.user.userId,
-    );
-    return { id: generatedId };
+    return await this.boardService.insertBoard(board, req.user.userId);
   }
 
   @Get()

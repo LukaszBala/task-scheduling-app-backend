@@ -37,7 +37,7 @@ export class BoardService {
     });
     const result = await newBoard.save();
     await this.usersService.addBoardToUsers([userId], result.id);
-    return result.id as string;
+    return await this.getAllUserBoards(userId);
   }
 
   async getAllUserBoards(userId: string): Promise<Board[]> {
@@ -181,13 +181,6 @@ export class BoardService {
     }
   }
 
-  private userCanAccessGuard(board: Board, userId: string) {
-    const userCanAccess = !!board.users.find((user) => user.userId === userId);
-    if (!userCanAccess) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-  }
-
   async editTask(userId, edit: EditTaskDto) {
     const board = await this.boardModel.findById(edit.boardId);
 
@@ -196,10 +189,10 @@ export class BoardService {
     let taskIdx;
     const column = board.columns.find((col) => {
       taskIdx = col.items.findIndex((item) => item.id === edit.task.id);
-      return taskIdx != null;
+      return taskIdx != null && taskIdx >= 0;
     });
 
-    if (!column || taskIdx == null) {
+    if (!column || taskIdx == null || taskIdx < 0) {
       throw new NotFoundException('task not found.');
     }
 
@@ -254,10 +247,18 @@ export class BoardService {
     let taskIdx;
     const columnIdx = board.columns.findIndex((col) => {
       taskIdx = col.items.findIndex((item) => item.id === taskDeleteDto.taskId);
-      return taskIdx != null;
+      return taskIdx != null && taskIdx >= 0;
     });
 
-    if (columnIdx != null && taskIdx != null) {
+    console.log('task,', taskIdx);
+    console.log('column', columnIdx);
+
+    if (
+      columnIdx != null &&
+      columnIdx >= 0 &&
+      taskIdx != null &&
+      taskIdx >= 0
+    ) {
       board.columns[columnIdx].items.splice(taskIdx, 1);
       await board.save();
       await this.boardModel.updateOne(
@@ -276,5 +277,12 @@ export class BoardService {
     }
 
     return await this.getSingleBoard(userId, taskDeleteDto.boardId);
+  }
+
+  private userCanAccessGuard(board: Board, userId: string) {
+    const userCanAccess = !!board.users.find((user) => user.userId === userId);
+    if (!userCanAccess) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
   }
 }
