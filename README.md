@@ -1,6 +1,6 @@
 # Backend for Task Scheduling app, kanban style
 
-Project made for academic classes. It utilizes JWT authentication and moongose.
+Project made for academic classes. It utilizes Nest library, JWT authentication and moongose.
 
 There is seperate frontend for it that uses React
 #### [https://github.com/LukaszBala/task-scheduling-app-frontend](https://github.com/LukaszBala/task-scheduling-app-frontend)
